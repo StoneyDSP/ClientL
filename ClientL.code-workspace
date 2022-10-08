@@ -1,0 +1,14 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "remote.WSL2.connectionMethod": "localhost",
+        "npm.autoDetect": "on",
+        "json.validate.enable": true,
+        "json.format.enable": true,
+        "json.schemaDownload.enable": true
+    }
+}
