@@ -9,6 +9,7 @@
         "npm.autoDetect": "on",
         "json.validate.enable": true,
         "json.format.enable": true,
-        "json.schemaDownload.enable": true
+        "json.schemaDownload.enable": true,
+        "powershell.enableProfileLoading": true
     }
 }
