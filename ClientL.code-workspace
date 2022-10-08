@@ -11,5 +11,14 @@
         "json.format.enable": true,
         "json.schemaDownload.enable": true,
         "powershell.enableProfileLoading": true
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode-remote.remote-wsl",
+            "ms-vscode-remote.remote-ssh",
+            "ms-vscode-remote.remote-ssh-edit",
+            "ms-vscode-remote.remote-containers",
+            "ms-vscode-remote.vscode-remote-extensionpack"
+        ]
     }
 }
