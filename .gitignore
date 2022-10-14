@@ -1,1 +1,3 @@
-node_modules
+/build/
+/installed/
+/node_modules/
