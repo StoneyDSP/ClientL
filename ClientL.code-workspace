@@ -5,12 +5,20 @@
         }
     ],
     "settings": {
-        "remote.WSL2.connectionMethod": "localhost",
+        "remote.WSL2.connectionMethod": "wslExeProxy",
+        "remote.WSL1.connectionMethod": "localhost",
+        "remote.WSL.debug": true,
+        "remote.autoForwardPorts": true,
+        "remote.downloadExtensionsLocally": false,
         "npm.autoDetect": "on",
         "json.validate.enable": true,
         "json.format.enable": true,
         "json.schemaDownload.enable": true,
-        "powershell.enableProfileLoading": true
+        "powershell.enableProfileLoading": true,
+        "git.enabled": true,
+        "git.requireGitUserConfig": true,
+        "github.gitProtocol": "ssh",
+        "github.gitAuthentication": true
     },
     "extensions": {
         "recommendations": [
