@@ -1,0 +1,14 @@
+{
+  "name": "clientl",
+  "author": {
+      "name": "Nathan Hood",
+      "email": "nathanjhood@googlemail.com",
+      "url": "http://stoneydsp.com"
+  },
+  "description": "",
+  "version": "0.0.0.1",
+  "scripts": {
+      "install": "",
+      "uninstall": ""
+  }
+}
