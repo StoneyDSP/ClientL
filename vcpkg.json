@@ -1,0 +1,26 @@
+{
+	"name": "cientl",
+	"version": "0.1.0.0",
+	"maintainers": [
+		"Nathan J. Hood"
+    ],
+	"description": [
+		"A generic 'My first client/server project' connecting Windows and Ubuntu terminals using WSL and VSCode."
+	],
+	"documentation": "https://github.com/StoneyDSP/ClientL/README.md",
+	"homepage": "https://github.com/StoneyDSP/ClientL",
+	"dependencies": [
+		{
+			"name": "vcpkg-cmake",
+			"host": true
+		},
+		{
+			"name": "vcpkg-cmake-config",
+			"host": true
+		},
+		{
+			"name": "vcpkg-cmake-get-vars",
+			"host": true
+		}
+	]
+}
