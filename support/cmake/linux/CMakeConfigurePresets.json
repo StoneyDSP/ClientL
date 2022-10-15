@@ -5,11 +5,17 @@
         "minor": 24,
         "patch": 2
     },
+    "include": [
+        "CMakeVendorPresets.json"
+    ],
     "configurePresets": [
 		{
 			"name": "linux-base",
 			"hidden": true,
 			"description": "Target Linux with the GNUC toolset and Ninja Multi-Config generator.",
+            "inherits": [
+                "LinuxVendorMap"
+            ],
 			"generator": "Ninja Multi-Config",
 			"binaryDir": "${sourceDir}/build/${presetName}",
 			"installDir": "${sourceDir}/installed/${presetName}",

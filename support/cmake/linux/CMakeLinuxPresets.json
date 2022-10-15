@@ -6,7 +6,6 @@
         "patch": 2
     },
     "include": [
-        "Linux_CMakeConfigurePresets.json",
-        "Linux_CMakeBuildPresets.json"
+        "CMakeBuildPresets.json"
     ]
 }

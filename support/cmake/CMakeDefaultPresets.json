@@ -7,7 +7,6 @@
     },
     "include": [
         "windows/CMakeWindowsPresets.json",
-        "linux/CMakeLinuxPresets.json",
-        "CMakeVendorPresets.json"
+        "linux/CMakeLinuxPresets.json"
     ]
 }

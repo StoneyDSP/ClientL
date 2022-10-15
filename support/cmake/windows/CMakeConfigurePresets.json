@@ -6,13 +6,17 @@
         "patch": 2
     },
     "include": [
-        "CMakeDebugPresets.json"
+        "CMakeDebugPresets.json",
+        "CMakeVendorPresets.json"
     ],
     "configurePresets": [
         {
             "name": "windows-base",
             "description": "Target Windows with the Visual Studio development environment.",
             "hidden": true,
+            "inherits": [
+                "windows-vendor-map"
+            ],
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "installDir": "${sourceDir}/installed/${presetName}",
