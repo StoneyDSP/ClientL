@@ -6,6 +6,7 @@
         "patch": 2
     },
     "include": [
+        "CMakeDebugPresets.json",
         "CMakeVendorPresets.json"
     ],
     "configurePresets": [
@@ -14,7 +15,8 @@
 			"hidden": true,
 			"description": "Target Linux with the GNUC toolset and Ninja Multi-Config generator.",
             "inherits": [
-                "LinuxVendorMap"
+                "linux-debug-settings",
+                "linux-vendor-map"
             ],
 			"generator": "Ninja Multi-Config",
 			"binaryDir": "${sourceDir}/build/${presetName}",
@@ -27,7 +29,7 @@
                 "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel",
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_TOOLCHAIN_FILE": "~/home/stoneydsp/vcpkg/scripts/buildsystems/vcpkg.cmake"
+                "CMAKE_TOOLCHAIN_FILE": "/home/stoneydsp/vcpkg/scripts/buildsystems/vcpkg.cmake"
             },
 			"condition": {
 				"type": "equals",

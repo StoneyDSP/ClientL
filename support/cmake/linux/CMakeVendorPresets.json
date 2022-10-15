@@ -7,7 +7,8 @@
     },
     "configurePresets": [
         {
-            "name": "LinuxVendorMap",
+            "name": "linux-vendor-map",
+            "hidden": true,
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
                     "hostOS": "Linux",

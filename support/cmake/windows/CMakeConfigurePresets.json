@@ -15,6 +15,7 @@
             "description": "Target Windows with the Visual Studio development environment.",
             "hidden": true,
             "inherits": [
+                "windows-debug-settings",
                 "windows-vendor-map"
             ],
             "generator": "Ninja Multi-Config",
