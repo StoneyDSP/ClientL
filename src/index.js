@@ -1,1 +1,1 @@
-import logger from './logger'
+import logger from './modules/loggers/logger'

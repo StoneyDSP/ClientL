@@ -1,12 +1,12 @@
 {
   "name": "clientl",
   "author": {
-      "name": "Nathan Hood",
+      "name": "Nathan J. Hood",
       "email": "nathanjhood@googlemail.com",
       "url": "http://stoneydsp.com"
   },
-  "description": "",
-  "version": "0.0.0.1",
+  "description": "A generic 'My first client/server project' connecting Windows and Ubuntu terminals using WSL and VSCode.",
+  "version": "0.1.0.0",
   "scripts": {
       "install": "",
       "uninstall": ""
