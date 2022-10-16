@@ -21,6 +21,12 @@
                     "**Presets.json"
                 ],
                 "url": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json"
+            },
+            {
+                "fileMatch": [
+                    "vcpkg.json"
+                ],
+                "url": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json"
             }
         ],
         "powershell.enableProfileLoading": true,
