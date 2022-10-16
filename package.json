@@ -8,6 +8,7 @@
   "description": "A generic 'My first client/server project' connecting Windows and Ubuntu terminals using WSL and VSCode.",
   "version": "0.1.0.0",
   "scripts": {
+      "test": "",
       "install": "",
       "uninstall": ""
   }
