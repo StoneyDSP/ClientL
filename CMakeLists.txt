@@ -82,10 +82,8 @@ option(USE_EXTERN "Use extern folder to resolve dependencies" ON)
 option(GIT_SUBMODULE "Check submodules during build" ON)
 # Use local vcpkg if found
 option(USE_VCPKG "Use local vcpkg if found" ON)
-# Use "foo" example library
-option(USE_FOO "Use 'foo' example library" ON)
 # Use tests
-option(USE_TESTS "Use tests" ON)
+option(USE_TESTS "Use tests" OFF)
 # Build using shared libraries. if this is set to ON, then all libraries are built as shared libraries by default.
 option(BUILD_SHARED_LIBS "Build using shared libraries." ON)
 # option for outputting compiler information at runtime
@@ -99,18 +97,144 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # ============================================================================ #
 #
+#                           Configure Dependencies
+#
+# ============================================================================ #
+
+if(USE_EXTERN)
+  # add required packages
+  message(STATUS "Checking git...\n")
+  message("\n")
+
+  if(GIT_FOUND)
+    message("git: already found. Using: ${CMAKE_PROJECT_NAME} submodules\n")
+  else()
+    if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/.gitmodules)
+      message("git: adding local submodules...\n")
+      find_package(Git)
+
+      # Update submodules as needed
+      if(GIT_FOUND)
+
+        if(GIT_SUBMODULE)
+          message(STATUS "Running git submodule update --init")
+          execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init
+                          WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+                          RESULT_VARIABLE GIT_SUBMOD_RESULT)
+            if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+              message(FATAL_ERROR "Running git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules!\n")
+            else()
+              message(STATUS "Running git submodule update --init complete; all git submodules are up to date.\n")
+            endif()
+        endif(GIT_SUBMODULE)
+
+      else(GIT_FOUND)
+        message(FATAL_ERROR "Running git submodule update --init failed; git not found!\n")
+      endif(GIT_FOUND)
+
+    else()
+      message("git: no submodule file found\n")
+    endif()
+
+  endif()
+
+endif()
+
+message("\n")
+
+# ============================================================================ #
+#
+#                               Configure vcpkg
+#
+# ============================================================================ #
+
+if(USE_VCPKG)
+  # This variable specifies an alternate folder containing a vcpkg.json manifest.
+  # Defaults to ${CMAKE_SOURCE_DIR} if ${CMAKE_SOURCE_DIR}/vcpkg.json exists.
+  if(DEFINED ${VCPKG_MANIFEST_DIR})
+    message(STATUS "vcpkg.json detected...\n")
+    message("Toolchain: VCPKG_MANIFEST_DIR = ${VCPKG_MANIFEST_DIR}")
+  else()
+    set(VCPKG_MANIFEST_DIR
+    ${CMAKE_CURRENT_LIST_DIR}/extern
+      CACHE STRING "vcpkg manifest file location")
+    message("Toolchain: VCPKG_MANIFEST_DIR = ${VCPKG_MANIFEST_DIR}")
+  endif()
+
+  if(DEFINED ${CMAKE_TOOLCHAIN_FILE})
+    message("Toolchain: Using remote vcpkg found at: ${CMAKE_TOOLCHAIN_FILE}")
+  else(DEFINED ${CMAKE_TOOLCHAIN_FILE})
+    message("Toolchain: CMAKE_TOOLCHAIN_FILE not defined - Searching for submodule...")
+
+    # Verbose vcpkg output logging
+    option(VCPKG_VERBOSE "verbose vcpkg output logging" ON)
+
+    # This variable forces vcpkg to operate in either manifest mode or classic mode.
+    # Defaults to ON when VCPKG_MANIFEST_DIR is non-empty or ${CMAKE_SOURCE_DIR}/vcpkg.json exists.
+    # To disable manifest mode while a vcpkg.json is detected, set this to OFF.
+    set(VCPKG_MANIFEST_MODE ON
+      CACHE STRING "vcpkg manifest mode on/off")
+    message("Toolchain: VCPKG_MANIFEST_MODE = ${VCPKG_MANIFEST_MODE}")
+
+    # This environment variable can be set to an existing directory to use for
+    # storing downloads instead of the internal downloads/ directory.
+    # It should always be set to an absolute path.
+    set(VCPKG_DOWNLOADS ${CMAKE_CURRENT_LIST_DIR}/downloads
+      CACHE STRING "vcpkg package downloads directory")
+    message("Toolchain: VCPKG_DOWNLOADS = ${VCPKG_DOWNLOADS}")
+
+    # This variable sets the location where libraries will be installed and consumed from.
+    # In manifest mode, the default is ${CMAKE_BINARY_DIR}/vcpkg_installed.
+    # In classic mode, the default is ${VCPKG_ROOT}/installed.
+    set(VCPKG_INSTALLED_DIR ${CMAKE_CURRENT_LIST_DIR}/installed
+      CACHE STRING "vcpkg package installation directory")
+    message("Toolchain: VCPKG_INSTALLED_DIR = ${VCPKG_INSTALLED_DIR}")
+
+    # location of .vcpkg-root file
+    set(VCPKG_ROOT ${CMAKE_CURRENT_LIST_DIR}/extern/vcpkg
+      CACHE STRING "location of .vcpkg-root file")
+    message("Toolchain: VCPKG_ROOT = ${VCPKG_ROOT}")
+
+    # define vcpkg required feature flags
+    set(VCPKG_FEATURE_FLAGS "manifests,versions,binarycaching,registries")
+    message("Toolchain: VCPKG_FEATURE_FLAGS = ${VCPKG_FEATURE_FLAGS}")
+
+    # Toolchain location. Stores result in the CMakeCache.
+    set(CMAKE_TOOLCHAIN_FILE
+    ${CMAKE_CURRENT_LIST_DIR}/extern/vcpkg/scripts/buildsystems/vcpkg.cmake
+      CACHE STRING "Toolchain file location")
+    message("Toolchain: Using local vcpkg submodule found at: ${CMAKE_TOOLCHAIN_FILE}\n")
+
+  endif(DEFINED ${CMAKE_TOOLCHAIN_FILE})
+
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VCPKG_ROOT}/scripts)
+
+  #include(${CMAKE_INSTALL_PREFIX}/share/vcpkg-cmake/vcpkg-port-config.cmake)
+  #include(${CMAKE_INSTALL_PREFIX}/share/vcpkg-cmake-config/vcpkg-port-config.cmake)
+  #include(${CMAKE_INSTALL_PREFIX}/share/vcpkg-cmake-get-vars/vcpkg-port-config.cmake)
+
+  # vcpkg_cmake_get_vars(CMAKE_VARS_FILE)
+  # include(${CMAKE_VARS_FILE})
+  # message(STATUS "detected CXX flags: ${VCPKG_DETECTED_CMAKE_CXX_FLAGS}\n")
+
+endif(USE_VCPKG)
+
+message("\n")
+
+# ============================================================================ #
+#
 #                           Create New Project
 #
 # ============================================================================ #
 
 message(STATUS "Detecting CMake project...\n")
-#${LOCAL_VERSION_MAJOR}.${LOCAL_VERSION_MINOR}.${LOCAL_VERSION_PATCH}.${LOCAL_VERSION_TWEAK}
+
 # Create a CMake project here.
 project (ClientL
   VERSION
     ${LOCAL_VERSION_MAJOR}.${LOCAL_VERSION_MINOR}.${LOCAL_VERSION_PATCH}.${LOCAL_VERSION_TWEAK}
   DESCRIPTION
-    "CMake project template for multi-platform continuous-integration pipelines, with native extensible build, test, debug, install workflows and git, vcpkg, and 3rd-party module support."
+    "A generic 'My first client/server project' connecting Windows and Ubuntu terminals using WSL and VSCode."
   HOMEPAGE_URL
     https://github.com/${PROJECT_VENDOR}/ClientL
   LANGUAGES
@@ -167,7 +291,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VERSION_MAJOR ${LOCAL_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${LOCAL_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${LOCAL_VERSION_PATCH})
-set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_LIST_DIR}/LICENCE)
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_LIST_DIR}/LICENSE)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_CURRENT_LIST_DIR}/README.md)
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 set(CPACK_SOURCE_IGNORE_FILES
@@ -227,7 +351,7 @@ join_paths(includedir_for_pc_file "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
 # create config file
 message("Creating project config file...")
 configure_package_config_file(
-    ${PROJECT_SOURCE_DIR}/support/cmake/${PROJECT_NAME}Config.cmake.in
+    ${PROJECT_SOURCE_DIR}/share/${PROJECT_NAME}Config.in.cmake
     ${PROJECT_CONFIG}
   INSTALL_DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
@@ -242,20 +366,20 @@ write_basic_package_version_file(
 
 message("Creating package config file...")
 configure_file(
-  ${PROJECT_SOURCE_DIR}/support/cmake/${PROJECT_NAME}.pc.in
+  ${PROJECT_SOURCE_DIR}/share/${PROJECT_NAME}.in.pc
   ${PACKAGE_CONFIG}
   @ONLY)
 message("Created package config file at ${PACKAGE_CONFIG}\n")
 
 message("Creating vcpkg manifest...")
 configure_file(
-  ${PROJECT_SOURCE_DIR}/support/vcpkg/vcpkg.json.in
+  ${PROJECT_SOURCE_DIR}/support/vcpkg/vcpkg.in.json
   ${VCPKG_MNFST})
 message("Created vcpkg manifest at ${VCPKG_MNFST}\n")
 
 message("Creating vcpkg configuration...")
 configure_file(
-  ${PROJECT_SOURCE_DIR}/support/vcpkg/vcpkg-configuration.json.in
+  ${PROJECT_SOURCE_DIR}/support/vcpkg/vcpkg-configuration.in.json
   ${VCPKG_CONFIG})
 message("Created vcpkg configuration at ${VCPKG_CONFIG}\n")
 
@@ -268,71 +392,9 @@ message("Created portfile at ${PORT_FILE}\n")
 # create config header
 message("Creating config header file...")
 configure_file(
-	${PROJECT_SOURCE_DIR}/support/cmake/${PROJECT_NAME}Config.h.in
+	${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}Config.in.h
 	${CM_VARS_CONFIG})
 message("Created config header file at ${CM_VARS_CONFIG}\n")
-
-message("\n")
-
-
-# ============================================================================ #
-#
-#                            Add target: "Foo.lib"
-#
-# ============================================================================ #
-
-if(USE_FOO)
-  message(STATUS "Foo enabled.")
-  message(STATUS "Adding target...")
-
-  # create library
-  add_library(Foo STATIC)
-  add_library(CMakeProject1::Foo ALIAS Foo)
-
-  # Set target version.
-  set_target_properties(Foo
-    PROPERTIES
-      VERSION ${LOCAL_VERSION_MAJOR}.${LOCAL_VERSION_MINOR}.${LOCAL_VERSION_PATCH}.${LOCAL_VERSION_TWEAK}
-      SOVERSION ${LOCAL_VERSION_MAJOR}
-      INTERFACE_Foo_MAJOR_VERSION ${LOCAL_VERSION_MAJOR})
-  set_property(TARGET Foo APPEND PROPERTY COMPATIBLE_INTERFACE_STRING Foo_MAJOR_VERSION)
-
-  # find and link to fmt package via vcpkg
-  find_package(fmt CONFIG REQUIRED)
-  target_link_libraries(Foo
-    PUBLIC
-      fmt::fmt
-  )
-
-  # Add source files and headers to target.
-  target_sources(Foo
-    PRIVATE
-      ${PROJECT_SOURCE_DIR}/src/foo/foo.cpp
-      ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/foo/foo.h
-  )
-
-  # add include directories
-  target_include_directories(Foo
-    PUBLIC
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/foo>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/foo>
-  )
-
-  # install the c++ "foo" headers
-  install(
-    FILES ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/foo/foo.h
-    DESTINATION ${${PROJECT_NAME}_INC_DIR}/foo
-  )
-
-  list(APPEND EXTRA_LIBS "Foo")
-  list(APPEND INSTALL_TARGETS "Foo")
-
-  message(STATUS "Added target: Foo.lib\n")
-
-else(USE_FOO)
-  message(STATUS "Foo disabled.\n")
-
-endif(USE_FOO)
 
 message("\n")
 
@@ -355,7 +417,7 @@ if(USE_TESTS)
 
   # create library
   add_library(Tests STATIC)
-  add_library(CMakeProject1::Tests ALIAS Tests)
+  add_library(${PROJECT_NAME}::Tests ALIAS Tests)
 
   # Set target version.
   set_target_properties(Tests
@@ -406,77 +468,63 @@ message("\n")
 
 # ============================================================================ #
 #
-#                            Add target: "Main.lib"
+#                            Add target: "${PROJECT_NAME}.lib"
 #
 # ============================================================================ #
 
 message(STATUS "Adding target...")
 
-#add_library(Main STATIC ${CM_VARS_CONFIG})
-#add_library(CMakeProject1::Main ALIAS Main)
-
-add_executable(Main ${CM_VARS_CONFIG})
+add_library(${PROJECT_NAME} STATIC ${CM_VARS_CONFIG})
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Set target version.
-set_target_properties(Main
+set_target_properties(${PROJECT_NAME}
   PROPERTIES
     VERSION ${LOCAL_VERSION_MAJOR}.${LOCAL_VERSION_MINOR}.${LOCAL_VERSION_PATCH}.${LOCAL_VERSION_TWEAK}
     SOVERSION ${LOCAL_VERSION_MAJOR}
-    INTERFACE_Main_MAJOR_VERSION ${LOCAL_VERSION_MAJOR})
-set_property(TARGET Main APPEND PROPERTY COMPATIBLE_INTERFACE_STRING Main_MAJOR_VERSION)
+    INTERFACE_${PROJECT_NAME}_MAJOR_VERSION ${LOCAL_VERSION_MAJOR})
+set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY COMPATIBLE_INTERFACE_STRING ${PROJECT_NAME}_MAJOR_VERSION)
 
 # Add source files and headers to target.
-target_sources(Main
+target_sources(${PROJECT_NAME}
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/src/main/main.cpp
-    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/main/main.h
+    ${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}.cpp
+    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}.h
 )
 
 # add include directories
-target_include_directories(Main
+target_include_directories(${PROJECT_NAME}
   PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/main>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/main>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# Link any extra libraries to our "main" out...
-target_link_libraries(Main
+# Link any extra libraries to our "${PROJECT_NAME}" out...
+target_link_libraries(${PROJECT_NAME}
   PUBLIC
     ${EXTRA_LIBS}
 )
 
-# install the c++ "main" headers
+# install the c++ "${PROJECT_NAME}" headers
 install(
-  FILES ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/main/main.h
-  DESTINATION ${${PROJECT_NAME}_INC_DIR}/main
+  FILES ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}.h
+  DESTINATION ${${PROJECT_NAME}_INC_DIR}
 )
 
-#list(APPEND EXTRA_LIBS Main)
-list(APPEND INSTALL_TARGETS Main)
+#list(APPEND EXTRA_LIBS ${PROJECT_NAME})
+list(APPEND INSTALL_TARGETS ${PROJECT_NAME})
 
-message(STATUS "Added target: Main.exe\n")
+message(STATUS "Added target: ${PROJECT_NAME}.lib\n")
 
 message("\n")
 
 # ============================================================================ #
 #
-#                     Add target: "Executable.exe"
+#                               Global options
 #
 # ============================================================================ #
-
-#add_executable(Executable ${CM_VARS_CONFIG})
-
-#target_include_directories(Executable
-#  PUBLIC
-#    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-#    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-#)
-
-#target_link_libraries(Executable PUBLIC Main)
-
-#list(APPEND INSTALL_TARGETS Executable)
 
 # Address sanitizer
 if(ASAN_ENABLED)

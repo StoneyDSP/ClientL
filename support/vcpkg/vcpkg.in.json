@@ -7,7 +7,7 @@
 	"description": [
 		"@PROJECT_DESCRIPTION@"
 	],
-	"documentation": "@PROJECT_HOMEPAGE_URL@/README.md",
+	"documentation": "@PROJECT_HOMEPAGE_URL@README.md",
 	"homepage": "@PROJECT_HOMEPAGE_URL@",
 	"dependencies": [
 		{

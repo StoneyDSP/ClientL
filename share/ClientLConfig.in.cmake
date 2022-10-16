@@ -2,4 +2,4 @@
 
 include(${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake)
 
-check_required_components(ClientL)
+check_required_components(@PROJECT_NAME@)
