@@ -11,17 +11,37 @@
         "remote.autoForwardPorts": true,
         "remote.downloadExtensionsLocally": false,
         "npm.autoDetect": "on",
+        "cmake.cmakePath": "cmake",
         "json.validate.enable": true,
         "json.format.enable": true,
         "json.schemaDownload.enable": true,
+        "json.schemas": [
+            {
+                "fileMatch": [
+                    "**Presets.json"
+                ],
+                "url": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json"
+            }
+        ],
         "powershell.enableProfileLoading": true,
         "git.enabled": true,
         "git.requireGitUserConfig": true,
+        "git.autoRepositoryDetection": true,
+        "git.terminalAuthentication": true,
         "github.gitProtocol": "ssh",
-        "github.gitAuthentication": true
+        "github.gitAuthentication": true,
+        "files.associations": {
+            "*.in.h": "cpp",
+            "*.in.json": "json",
+            "*.in.cmake": "cmake",
+            "*.cmake": "cmake"
+        }
     },
     "extensions": {
         "recommendations": [
+            "ms-vscode.cpptools",
+            "ms-vscode.cpptools-extension-pack",
+            "ms-vscode.cmake-tools",
             "ms-vscode-remote.remote-wsl",
             "ms-vscode-remote.remote-ssh",
             "ms-vscode-remote.remote-ssh-edit",

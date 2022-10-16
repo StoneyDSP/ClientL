@@ -107,7 +107,7 @@ if(USE_EXTERN)
   message("\n")
 
   if(GIT_FOUND)
-    message("git: already found. Using: ${CMAKE_PROJECT_NAME} submodules\n")
+    message("git: already found. Using: ${CMAKE_PROJECT_NAME} submodules, if any\n")
   else()
     if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/.gitmodules)
       message("git: adding local submodules...\n")
@@ -156,14 +156,14 @@ if(USE_VCPKG)
     message("Toolchain: VCPKG_MANIFEST_DIR = ${VCPKG_MANIFEST_DIR}")
   else()
     set(VCPKG_MANIFEST_DIR
-    ${CMAKE_CURRENT_LIST_DIR}/extern
+    ${CMAKE_CURRENT_LIST_DIR}
       CACHE STRING "vcpkg manifest file location")
     message("Toolchain: VCPKG_MANIFEST_DIR = ${VCPKG_MANIFEST_DIR}")
   endif()
 
-  if(DEFINED ${CMAKE_TOOLCHAIN_FILE})
+  if(${CMAKE_TOOLCHAIN_FILE})
     message("Toolchain: Using remote vcpkg found at: ${CMAKE_TOOLCHAIN_FILE}")
-  else(DEFINED ${CMAKE_TOOLCHAIN_FILE})
+  else(${CMAKE_TOOLCHAIN_FILE})
     message("Toolchain: CMAKE_TOOLCHAIN_FILE not defined - Searching for submodule...")
 
     # Verbose vcpkg output logging
@@ -190,22 +190,11 @@ if(USE_VCPKG)
       CACHE STRING "vcpkg package installation directory")
     message("Toolchain: VCPKG_INSTALLED_DIR = ${VCPKG_INSTALLED_DIR}")
 
-    # location of .vcpkg-root file
-    set(VCPKG_ROOT ${CMAKE_CURRENT_LIST_DIR}/extern/vcpkg
-      CACHE STRING "location of .vcpkg-root file")
-    message("Toolchain: VCPKG_ROOT = ${VCPKG_ROOT}")
-
     # define vcpkg required feature flags
     set(VCPKG_FEATURE_FLAGS "manifests,versions,binarycaching,registries")
     message("Toolchain: VCPKG_FEATURE_FLAGS = ${VCPKG_FEATURE_FLAGS}")
 
-    # Toolchain location. Stores result in the CMakeCache.
-    set(CMAKE_TOOLCHAIN_FILE
-    ${CMAKE_CURRENT_LIST_DIR}/extern/vcpkg/scripts/buildsystems/vcpkg.cmake
-      CACHE STRING "Toolchain file location")
-    message("Toolchain: Using local vcpkg submodule found at: ${CMAKE_TOOLCHAIN_FILE}\n")
-
-  endif(DEFINED ${CMAKE_TOOLCHAIN_FILE})
+  endif(${CMAKE_TOOLCHAIN_FILE})
 
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VCPKG_ROOT}/scripts)
 
