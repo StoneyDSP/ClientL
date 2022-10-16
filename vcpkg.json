@@ -11,10 +11,6 @@
 	"homepage": "https://github.com/StoneyDSP/ClientL",
 	"dependencies": [
 		{
-			"name": "catch2",
-			"host": true
-		},
-		{
 			"name": "vcpkg-cmake",
 			"host": true
 		},
@@ -24,6 +20,10 @@
 		},
 		{
 			"name": "vcpkg-cmake-get-vars",
+			"host": true
+		},
+		{
+			"name": "catch2",
 			"host": true
 		}
 	]

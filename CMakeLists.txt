@@ -324,13 +324,13 @@ set(${PROJECT_NAME}_CMAKE_DIR       ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME
 set(${PROJECT_NAME}_PKGCONFIG_DIR   ${CMAKE_INSTALL_LIBDIR}/pkgconfig             CACHE PATH "Installation directory for pkgconfig (.pc) files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path.")
 
 # Configure files.
-set(VERSION_CONFIG                  ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake)
-set(PROJECT_CONFIG                  ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake)
-set(CM_VARS_CONFIG                  ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.h)
-set(PACKAGE_CONFIG                  ${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}.pc)
+set(VERSION_CONFIG                  ${PROJECT_BINARY_DIR}/share/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake)
+set(PROJECT_CONFIG                  ${PROJECT_BINARY_DIR}/share/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake)
+set(CM_VARS_CONFIG                  ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}Config.h)
+set(PACKAGE_CONFIG                  ${PROJECT_BINARY_DIR}/share/${PROJECT_NAME}/${PROJECT_NAME_LOWER}.pc)
 set(VCPKG_MNFST                     ${PROJECT_BINARY_DIR}/vcpkg.json)
 set(VCPKG_CONFIG                    ${PROJECT_BINARY_DIR}/vcpkg-configuration.json)
-set(PORT_FILE                       ${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-portfile.cmake)
+set(PORT_FILE                       ${PROJECT_BINARY_DIR}/share/${PROJECT_NAME}/${PROJECT_NAME_LOWER}-portfile.cmake)
 set(TARGETS_EXPORT_NAME             ${PROJECT_NAME}Targets)
 
 include(JoinPaths)
@@ -555,7 +555,7 @@ install(
 export(
   TARGETS ${INSTALL_TARGETS}
   NAMESPACE ${PROJECT_NAME}::
-  FILE ${PROJECT_BINARY_DIR}/${TARGETS_EXPORT_NAME}.cmake
+  FILE ${PROJECT_BINARY_DIR}/share/${PROJECT_NAME}/${TARGETS_EXPORT_NAME}.cmake
 )
 
 # Install version, config and target files.
