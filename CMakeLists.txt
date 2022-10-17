@@ -92,6 +92,8 @@ set(USE_FOLDERS OFF)
 # export symbols on Windows for shared libraries to work
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+option(CLEAN_TEMP_FILES "Clean source tree" OFF)
+
 # ============================================================================ #
 #
 #                           Configure Dependencies
@@ -578,3 +580,35 @@ install(
   FILES ${PACKAGE_CONFIG}
   DESTINATION ${${PROJECT_NAME}_PKGCONFIG_DIR}
 )
+
+if(CLEAN_TEMP_FILES)
+  #include(${PROJECT_SOURCE_DIR}/support/cmake/clean-all.cmake)
+  set(${${PROJECT_NAME}_Temp_files} ${PROJECT_SOURCE_DIR}/CMakeCache.txt)
+  list(APPEND ${PROJECT_NAME}_Temp_files
+  ${PROJECT_SOURCE_DIR}/.cmake
+  ${PROJECT_SOURCE_DIR}/bin
+  ${PROJECT_SOURCE_DIR}/lib
+  ${PROJECT_SOURCE_DIR}/installed
+  ${PROJECT_SOURCE_DIR}/share
+  ${PROJECT_SOURCE_DIR}/CMakeFiles
+  ${PROJECT_SOURCE_DIR}/CMakeCache.txt
+  ${PROJECT_SOURCE_DIR}/cmake_install.cmake
+  ${PROJECT_SOURCE_DIR}/Makefile
+  ${PROJECT_SOURCE_DIR}/CPackConfig.cmake
+  ${PROJECT_SOURCE_DIR}/CPackSourceConfig.cmake
+  ${PROJECT_SOURCE_DIR}/.env
+  ${PROJECT_SOURCE_DIR}/.ninja_deps
+  ${PROJECT_SOURCE_DIR}/.ninja_log
+  ${PROJECT_SOURCE_DIR}/vcpkg-configuration.json
+  ${PROJECT_SOURCE_DIR}/build-${CMAKE_BUILD_TYPE}.ninja
+  ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}Config.h
+  ${PROJECT_SOURCE_DIR}/vcpkg-manifest-install.log
+  )
+
+  #https://stackoverflow.com/questions/9680420/looking-for-a-cmake-clean-command-to-clear-up-cmake-output
+  foreach(file ${PROJECT_NAME}_Temp_files)
+    if (EXISTS ${file})
+      file(REMOVE_RECURSE ${file})
+    endif()
+  endforeach(file)
+endif()

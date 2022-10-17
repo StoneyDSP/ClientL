@@ -9,9 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/StoneyDSP/ClientL.git"
+    "url": "https://github.com/StoneyDSP/ClientL.git"
   },
   "main": "src/server.js",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/StoneyDSP/ClientL/issues"
   },
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "configure": "cmake -B .",
-    "build": "cmake --build . --config CONFIG --target all",
+    "build": "cmake --build . --target all",
     "test": "ctest -C --config Debug",
     "installation": "cpack --config Debug CPackSourceConfig.cmake",
     "start": "NODE_ENV=production node src/server",
@@ -33,7 +34,10 @@
     "zip-build": "cpack -G ZIP -C --config Debug build/x64-linux",
     "repl": "node src/repl.js",
     "timer": "node src/timer.js",
-    "clean": ""
+    "clean": "cmake -D CLEAN_TEMP_FILES=ON -B .",
+    "db-connect": "node src/database/db_connect.js",
+    "db-create": "node src/database/db_create.js",
+    "db-table": "node src/database/db_table.js"
   },
   "engines": {
     "node": "18.11.0",
@@ -45,8 +49,12 @@
     "debug": "^4.3.4",
     "dotenv": "^16.0.3",
     "event-stream": "^4.0.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "inquirer": "^9.1.3",
     "mysql": "^2.18.1",
     "progress": "^2.0.3",
+    "repl": "^0.1.3",
     "semver": "^7.3.8"
   }
 }

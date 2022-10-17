@@ -1,36 +1,96 @@
-// import logger from './modules/loggers/logger';
-// import CMake from 'cmake-js/lib/cMake';
-// import async from 'async';
-// import semver from 'semver';
+// import logger from './modules/loggers/logger.js';
 // import ClientL from './include/ClientL/ClientL.h';
-require('dotenv').config();
-const http = require('http')
-const repl = require('repl');
+import dotenv from 'dotenv';
+import CMake from 'cmake-js/lib/cMake.js';
+import async from 'async';
+import semver from 'semver';
+import inquirer from 'inquirer';
+import http from 'http'
+import mysql from 'mysql'
+import repl from 'repl'
+import fs from 'fs'
 
-let message = '';
-const hostname = '127.0.0.1'
-const port = 3000
 
+// loads .env file contents into 'process.env.'
+const config = dotenv.config();
+
+// configuration environment
+let report = `Running in ${process.env.NODE_ENV} mode`;
 if (process.env.NODE_ENV === 'development') {
-  message = `Running in ${process.env.NODE_ENV} mode, ${process.env.CONFIG} configuration\n`;
+  console.log(report + ` under ${process.env.CONFIG} configuration`) ;
 }
 else {
-  message = `Running in ${process.env.NODE_ENV} mode\n`;
+  console.log(report);
 }
 
 if (['production', 'staging'].includes(process.env.NODE_ENV)) {
   // ...
 }
 
+const questions = [
+  {
+    type: 'input',
+    name: 'hostid',
+    message: "What's your host address?",
+    default: '127.0.0.1'
+  },
+  {
+    type: 'input',
+    name: 'portid',
+    message: "What's your port address?",
+    default: '3000'
+  },
+  {
+    type: 'input',
+    name: 'userid',
+    message: "What's your username?"
+  },
+  {
+    type: 'input',
+    name: 'keyid',
+    message: "What's your key or passphrase?"
+  },
+];
+
+inquirer.prompt(questions)
+        .then(answers => {
+          server.listen((answers.portid), (answers.hostid), () =>
+          {
+            console.log(`Server running at http://${answers.hostid}:${answers.portid}/`)
+            console.log(answers.userid)
+          })
+        })
+        .catch(error => {
+                          if (error.isTtyError)
+                          {
+                            console.log(`Prompt couldnt be rendered in the current environment`)
+                          }
+                          else
+                          {
+                            console.log(`Something else went wrong`)
+                          }
+                        })
+;
+
 const server = http.createServer((req, res) => {
   res.statusCode = 200
   res.setHeader('Content-Type', 'text/plain')
-  res.end(message)
+  res.end('Server created.')
 })
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`)
-  console.log(message)
-})
+// database
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "yourusername",
+  password: "yourpassword",
+  database: "clientl"
+});
 
-const o = { a: 'foo', b: 'bar', c: 42 };
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Result: " + result);
+  });
+});
