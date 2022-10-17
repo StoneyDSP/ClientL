@@ -22,16 +22,18 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "cmake --build build/x64-linux --config Debug --target all",
-    "configure": "cmake -B build/x64-linux",
-    "test": "ctest -C --config build/x64-linux",
-    "install": "cpack --config build/x64-linux/CPackSourceConfig.cmake",
-    "start-dev": "NODE_ENV=development node src/server",
+    "configure": "cmake -B .",
+    "build": "cmake --build . --config CONFIG --target all",
+    "test": "ctest -C --config Debug",
+    "installation": "cpack --config Debug CPackSourceConfig.cmake",
     "start": "NODE_ENV=production node src/server",
-    "tar": "cpack -G TAR -C build/x64-linux/CPackSourceConfig.cmake",
-    "zip": "cpack -G ZIP -C --config build/x64-linux",
+    "start-dev": "NODE_ENV=development node src/server",
+    "tar-source": "cpack -G TAR -C CPackSourceConfig.cmake",
+    "zip-source": "cpack -G ZIP -C CPackSourceConfig.cmake",
+    "zip-build": "cpack -G ZIP -C --config Debug build/x64-linux",
     "repl": "node src/repl.js",
-    "timer": "node src/timer.js"
+    "timer": "node src/timer.js",
+    "clean": ""
   },
   "engines": {
     "node": "18.11.0",

@@ -22,8 +22,6 @@
 
 #include <iostream>
 #include <string.h>
-// Node API
-//#include <node_api.h>
 
 /**
  * @brief The ClientL object class.

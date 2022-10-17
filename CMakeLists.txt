@@ -334,7 +334,7 @@ join_paths(includedir_for_pc_file "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
 # create .env file
 message("Creating .env file...")
 configure_file(
-  ${PROJECT_SOURCE_DIR}/.env.in
+  ${PROJECT_SOURCE_DIR}/support/.in.env
   ${PROJECT_BINARY_DIR}/.env)
 message("Created .env file\n")
 
