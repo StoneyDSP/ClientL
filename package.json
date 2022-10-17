@@ -30,7 +30,8 @@
     "start": "NODE_ENV=production node src/server",
     "tar": "cpack -G TAR -C build/x64-linux/CPackSourceConfig.cmake",
     "zip": "cpack -G ZIP -C --config build/x64-linux",
-    "repl": "node src/repl.js"
+    "repl": "node src/repl.js",
+    "timer": "node src/timer.js"
   },
   "engines": {
     "node": "18.11.0",
@@ -43,6 +44,7 @@
     "dotenv": "^16.0.3",
     "event-stream": "^4.0.1",
     "mysql": "^2.18.1",
+    "progress": "^2.0.3",
     "semver": "^7.3.8"
   }
 }

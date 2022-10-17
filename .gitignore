@@ -13,6 +13,8 @@
 
 Makefile
 .env
+.ninja_deps
+.ninja_log
 vcpkg-configuration.json
 build**.ninja
 ClientLConfig.h
