@@ -1,3 +1,7 @@
 /build/
+/downloads/
 /installed/
 /node_modules/
+/vcpkg/
+/.*build.*
+**.DS_Store

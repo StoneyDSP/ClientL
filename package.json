@@ -11,5 +11,17 @@
       "test": "",
       "install": "",
       "uninstall": ""
+  },
+  "engines": {
+    "node": "^12.22.9",
+    "vscode": "^1.22.0"
+  },
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "async": "^3.2.4",
+    "semver": "^7.3.8",
+    "event-stream": "^4.0.1",
+    "debug": "^4.3.4",
+    "cmake-js": "^7.0.0"
   }
 }
