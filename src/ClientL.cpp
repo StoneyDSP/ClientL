@@ -16,7 +16,7 @@
  * @brief Construct a new ClientL object
  *
  */
-ClientL::ClientL() : configuration("")
+ClientL::ClientL() : configuration("string")
 {
 
 }

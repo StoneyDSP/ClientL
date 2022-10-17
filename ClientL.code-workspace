@@ -136,7 +136,7 @@
         },
         "cmake.loggingLevel": "info",
 		"cmake.sourceDirectory": "${workspaceFolder}",
-		"cmake.buildDirectory": "${workspaceFolder}\\build",
+		"cmake.buildDirectory": "${workspaceFolder}\\bin",
 		"cmake.installPrefix": "${workspaceFolder}\\installed",
 		"cmake.useCMakePresets": "auto",
 		"cmake.configureEnvironment": {},

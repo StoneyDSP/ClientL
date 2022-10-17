@@ -18,10 +18,12 @@
 #define CLIENTL_H_INCLUDED
 
 // Global app config header.
-#include "ClientLConfig.h"
+//#include "ClientLConfig.h"
 
 #include <iostream>
 #include <string.h>
+// Node API
+#include <node_api.h>
 
 /**
  * @brief The ClientL object class.
@@ -29,7 +31,9 @@
  */
 class ClientL
 {
+
 public:
+
     /**
      * @brief Construct a new ClientL object
      *
@@ -41,7 +45,9 @@ public:
      *
      */
     ~ClientL();
+
 private:
+
     std::string configuration;
 };
 

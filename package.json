@@ -1,21 +1,36 @@
 {
   "name": "clientl",
+  "version": "0.1.0.0",
+  "description": "A generic 'My first client/server project' connecting Windows and Ubuntu terminals using WSL and VSCode.",
   "author": {
     "name": "Nathan J. Hood",
     "email": "nathanjhood@googlemail.com",
     "url": "http://stoneydsp.com"
   },
-  "description": "A generic 'My first client/server project' connecting Windows and Ubuntu terminals using WSL and VSCode.",
-  "version": "0.1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StoneyDSP/ClientL.git"
+  },
+  "main": "src/server.js",
+  "bugs": {
+    "url": "https://github.com/StoneyDSP/ClientL/issues"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test",
+    "bin": "bin",
+    "lib": "lib"
+  },
   "scripts": {
-    "build": "cmake --build build/x64-linux --config --target all",
+    "build": "cmake --build build/x64-linux --config Debug --target all",
     "configure": "cmake -B build/x64-linux",
     "test": "ctest -C --config build/x64-linux",
     "install": "cpack --config build/x64-linux/CPackSourceConfig.cmake",
     "start-dev": "NODE_ENV=development node src/server",
     "start": "NODE_ENV=production node src/server",
     "tar": "cpack -G TAR -C build/x64-linux/CPackSourceConfig.cmake",
-    "zip": "cpack -G ZIP -C --config build/x64-linux"
+    "zip": "cpack -G ZIP -C --config build/x64-linux",
+    "repl": "node src/repl.js"
   },
   "engines": {
     "node": "18.11.0",
@@ -25,6 +40,7 @@
     "async": "^3.2.4",
     "cmake-js": "^7.0.0",
     "debug": "^4.3.4",
+    "dotenv": "^16.0.3",
     "event-stream": "^4.0.1",
     "mysql": "^2.18.1",
     "semver": "^7.3.8"

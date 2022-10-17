@@ -88,7 +88,7 @@ option(OUTPUT_COMPILER_INFO "Output compiler information when launching the main
 # Build with Address Sanitizer
 option(ASAN_ENABLED "Build with Address Sanitizer" OFF)
 # Use the target 'FOLDER' property to organize targets into folders
-set(USE_FOLDERS ON)
+set(USE_FOLDERS OFF)
 # export symbols on Windows for shared libraries to work
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -331,13 +331,20 @@ include(JoinPaths)
 join_paths(libdir_for_pc_file "\${exec_prefix}" "${CMAKE_INSTALL_LIBDIR}")
 join_paths(includedir_for_pc_file "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
 
+# create .env file
+message("Creating .env file...")
+configure_file(
+  ${PROJECT_SOURCE_DIR}/.env.in
+  ${PROJECT_BINARY_DIR}/.env)
+message("Created .env file\n")
+
 # create config file
 message("Creating project config file...")
 configure_package_config_file(
-    ${PROJECT_SOURCE_DIR}/share/${PROJECT_NAME}Config.in.cmake
+    ${PROJECT_SOURCE_DIR}/support/${PROJECT_NAME}Config.in.cmake
     ${PROJECT_CONFIG}
   INSTALL_DESTINATION
-    ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+    ${CMAKE_INSTALL_LIBDIR}/share/${PROJECT_NAME})
 message("Created project config file at ${PROJECT_CONFIG}\n")
 
 # generate the version file for the config file
@@ -349,16 +356,16 @@ write_basic_package_version_file(
 
 message("Creating package config file...")
 configure_file(
-  ${PROJECT_SOURCE_DIR}/share/${PROJECT_NAME}.in.pc
+  ${PROJECT_SOURCE_DIR}/support/${PROJECT_NAME}.in.pc
   ${PACKAGE_CONFIG}
   @ONLY)
 message("Created package config file at ${PACKAGE_CONFIG}\n")
 
-message("Creating vcpkg manifest...")
-configure_file(
-  ${PROJECT_SOURCE_DIR}/support/vcpkg/vcpkg.in.json
-  ${VCPKG_MNFST})
-message("Created vcpkg manifest at ${VCPKG_MNFST}\n")
+# message("Creating vcpkg manifest...")
+# configure_file(
+#   ${PROJECT_SOURCE_DIR}/support/vcpkg/vcpkg.in.json
+#   ${VCPKG_MNFST})
+# message("Created vcpkg manifest at ${VCPKG_MNFST}\n")
 
 message("Creating vcpkg configuration...")
 configure_file(
@@ -375,7 +382,7 @@ message("Created portfile at ${PORT_FILE}\n")
 # create config header
 message("Creating config header file...")
 configure_file(
-	${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}Config.in.h
+	${PROJECT_SOURCE_DIR}/support/${PROJECT_NAME}Config.in.h
 	${CM_VARS_CONFIG})
 message("Created config header file at ${CM_VARS_CONFIG}\n")
 
@@ -399,7 +406,7 @@ if(USE_TESTS)
   include(${CMAKE_CURRENT_LIST_DIR}/tests/run_from_bin_tree.cmake)
 
   # create library
-  add_library(Tests STATIC)
+  add_library(Tests SHARED)
   add_library(${PROJECT_NAME}::Tests ALIAS Tests)
 
   # Set target version.
@@ -457,7 +464,7 @@ message("\n")
 
 message(STATUS "Adding target...")
 
-add_library(${PROJECT_NAME} STATIC ${CM_VARS_CONFIG})
+add_library(${PROJECT_NAME} SHARED ${CM_VARS_CONFIG})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Set target version.
