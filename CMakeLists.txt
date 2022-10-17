@@ -71,13 +71,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_MODULE_PATH
   "${CMAKE_MODULE_PATH}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/support/cmake"
-  "${CMAKE_CURRENT_SOURCE_DIR}/extern/vcpkg/scripts/ports.cmake")
+  "${CMAKE_CURRENT_SOURCE_DIR}/support/cmake")
 
 include(${CMAKE_CURRENT_LIST_DIR}/support/cmake/version-handling.cmake)
 
-# Use extern folder to resolve dependencies
-option(USE_EXTERN "Use extern folder to resolve dependencies" ON)
 # Check submodules during build
 option(GIT_SUBMODULE "Check submodules during build" ON)
 # Use local vcpkg if found
@@ -91,7 +88,7 @@ option(OUTPUT_COMPILER_INFO "Output compiler information when launching the main
 # Build with Address Sanitizer
 option(ASAN_ENABLED "Build with Address Sanitizer" OFF)
 # Use the target 'FOLDER' property to organize targets into folders
-set(USE_FOLDERS OFF)
+set(USE_FOLDERS ON)
 # export symbols on Windows for shared libraries to work
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -282,18 +279,15 @@ set(CPACK_PACKAGE_VERSION_MINOR ${LOCAL_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${LOCAL_VERSION_PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_LIST_DIR}/LICENSE)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_CURRENT_LIST_DIR}/README.md)
+set(CPACK_RESOURCE_FILE_VERSION ${CMAKE_CURRENT_LIST_DIR}/VERSION)
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 set(CPACK_SOURCE_IGNORE_FILES
     /.git/*
     /.github
     /.vs
     /.vscode
-    /build
-    /downloads
-    /installed
-    /vcpkg
-    /.*build.*
     /\\\\.DS_Store
+    ${GIT_IGNORE}
 )
 
 # include installer generator
@@ -320,7 +314,7 @@ set(CMAKE_PDB_OUTPUT_DIRECTORY      ${CMAKE_BINARY_DIR}/bin                     
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin                       CACHE PATH "Executable/dll output dir.")
 set(${PROJECT_NAME}_INC_DIR         ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}   CACHE PATH "Installation directory for include files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path.")
 set(${PROJECT_NAME}_LIB_DIR         ${CMAKE_INSTALL_LIBDIR}                       CACHE PATH "Installation directory for libraries, a relative path that will be joined to ${CMAKE_INSTALL_PREFIX} or an absolute path.")
-set(${PROJECT_NAME}_CMAKE_DIR       ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME} CACHE PATH "Installation directory for CMake (.cmake) files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path.")
+set(${PROJECT_NAME}_SHARE_DIR       ${CMAKE_INSTALL_LIBDIR}/share/${PROJECT_NAME} CACHE PATH "Installation directory for CMake (.cmake) files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path.")
 set(${PROJECT_NAME}_PKGCONFIG_DIR   ${CMAKE_INSTALL_LIBDIR}/pkgconfig             CACHE PATH "Installation directory for pkgconfig (.pc) files, a relative path that will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute path.")
 
 # Configure files.
