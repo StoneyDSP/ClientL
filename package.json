@@ -1,27 +1,32 @@
 {
   "name": "clientl",
   "author": {
-      "name": "Nathan J. Hood",
-      "email": "nathanjhood@googlemail.com",
-      "url": "http://stoneydsp.com"
+    "name": "Nathan J. Hood",
+    "email": "nathanjhood@googlemail.com",
+    "url": "http://stoneydsp.com"
   },
   "description": "A generic 'My first client/server project' connecting Windows and Ubuntu terminals using WSL and VSCode.",
   "version": "0.1.0.0",
   "scripts": {
-      "test": "",
-      "install": "",
-      "uninstall": ""
+    "build": "cmake --build build/x64-linux --config --target all",
+    "configure": "cmake -B build/x64-linux",
+    "test": "ctest -C --config build/x64-linux",
+    "install": "cpack --config build/x64-linux/CPackSourceConfig.cmake",
+    "start-dev": "NODE_ENV=development node src/server",
+    "start": "NODE_ENV=production node src/server",
+    "tar": "cpack -G TAR -C build/x64-linux/CPackSourceConfig.cmake",
+    "zip": "cpack -G ZIP -C --config build/x64-linux"
   },
   "engines": {
-    "node": "^12.22.9",
+    "node": "18.11.0",
     "vscode": "^1.22.0"
   },
   "dependencies": {
-    "mysql": "^2.18.1",
     "async": "^3.2.4",
-    "semver": "^7.3.8",
-    "event-stream": "^4.0.1",
+    "cmake-js": "^7.0.0",
     "debug": "^4.3.4",
-    "cmake-js": "^7.0.0"
+    "event-stream": "^4.0.1",
+    "mysql": "^2.18.1",
+    "semver": "^7.3.8"
   }
 }
